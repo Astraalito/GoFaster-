@@ -2,6 +2,7 @@ var config = {
     type: Phaser.AUTO,
     width: screen.width,
     height: screen.height,
+    backgroundColor: '#71c5cf',  // Ciel bleu
     scene: {
         preload: preload,
         create: create,
