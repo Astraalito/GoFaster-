@@ -2,12 +2,13 @@ var config = {
     type: Phaser.AUTO,
     width: screen.width,
     height: screen.height,
-    backgroundColor: '#71c5cf',  // Ciel bleu
+    //backgroundColor: '#71c5cf',  // Ciel bleu
     scene: {
         preload: preload,
         create: create,
         update: update
-    }
+    },
+    parent: 'Game',
 };
 
 var game = new Phaser.Game(config);
@@ -21,7 +22,9 @@ function preload ()
 
 function create ()
 {
-    this.add.image(960, 540, 'ciel');
+    this.sky = this.add.image(0, 0, 'ciel').setOrigin(0, 0);
+    this.sol2 = this.add.image(960, 540, 'sol2');
+    this.sol1 = this.add.image(960, 540, 'sol1');
 }
 
 function update () 
