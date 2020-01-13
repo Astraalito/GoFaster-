@@ -48,6 +48,10 @@ function preload ()
     this.load.image('button2', 'ressources/img/sprite/buttons/buttonB.png');
     this.load.image('button3', 'ressources/img/sprite/buttons/buttonX.png');
     this.load.image('button4', 'ressources/img/sprite/buttons/buttonY.png');
+
+    //chargement interface
+    this.load.image('endgame', 'ressources/img/interface/endgame.png');
+    
     
     //chargement audio
     this.load.audio('course', 'ressources/sound/musique/course.mp3');
@@ -87,11 +91,17 @@ function create ()
     nuage1 = this.physics.add.sprite(700, 300, 'nuage1');
     nuage2 = this.physics.add.sprite(960, 300, 'nuage2');
 
-    perso1 = this.physics.add.sprite(j1Pos, 410, 'elvis').setOrigin(0, 0); //TODO changer le personnage en fonction de la selection
+    perso1 = this.physics.add.sprite(j1Pos, 410, 'elvis').setOrigin(0, 0);
     perso2 = this.physics.add.sprite(j2Pos, 570, 'elvis').setOrigin(0, 0);
 
     button = instance.physics.add.sprite((screen.width/2), (screen.height/4), `button1`);
     button.visible = false;
+
+    endgame = this.add.image(screen.width/2, screen.height/2, 'endgame');
+    endgame.visible = false;
+
+    mort = this.physics.add.sprite(0, 410, 'mort').setOrigin(0, 0);
+    mort.visible = false;
 
     tempsInitial = new Date().getTime();
 }
@@ -106,7 +116,7 @@ function update ()
     defilementMap(800);
     
     //choix et affichage avec en paramètre le nombre de milliseconde avant de relancer la fonction
-    choixInput(3000)
+    choixInput(1000)
 
     if(boutonActuel == 1){
         inputJoueursA();
@@ -125,25 +135,32 @@ function update ()
     }
     
     //si l'un des persos sort de l'écran par la gauche, la partie est terminée
-    if (perso1.x < 0 || perso1.x > 1920 || perso2.x < 0 || perso2.x > 1920) {        
-        mort = this.physics.add.sprite(0, 410, 'mort').setOrigin(0, 0);   
+    if (perso1.x < 0 || perso2.x < 0 ) {        
+        endGame();
     }
+    
 }
 
 function choixInput(counter)
 {
     if(tempsActu > tempsInitial + counter){
-        //choisi un nombre aléatoire entre 1 et 4
-        num = Math.floor((Math.random() * Math.floor(4)) + 1);
-        
-        button.visible = true;
-
-        //change la texture du bouton
-        button.setTexture(`button${num}`, 0);
-
+        num = Math.floor((Math.random() * Math.floor(4)) + 1); //choisi un nombre aléatoire entre 1 et 4
+        button.setTexture(`button${num}`, 0); //change la texture du bouton
+        button.visible = true; //fais réapparaitre le bouton
         boutonActuel = num;
-
-        //remet le compteur a zéro
-        tempsInitial = new Date().getTime();
+        tempsInitial = new Date().getTime(); //remet le compteur a zéro
     }
+}
+
+function endGame(){
+    mort.visible = true;
+    endgame.visible = true;
+    document.body.addEventListener('keypress', resetGame);
+}
+
+function resetGame(){
+    mort.visible = false;
+    endgame.visible = false;
+    j1Pos = 700;
+    j2Pos = 700;
 }
